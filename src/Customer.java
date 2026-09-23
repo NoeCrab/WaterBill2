@@ -4,10 +4,10 @@ import java.io.InputStreamReader;
 
 public class Customer {
 
-    String name;
-    int gallonsUsed;
-    int customerType; //1 = Single Family and 2 = Duplex
-    double bill;
+    private String name;
+    private int gallonsUsed;
+    private int customerType; //1 = Single Family and 2 = Duplex
+    private double bill;
 
     final double SINGLE_BASE = 13.21;
     final int SINGLE_TIER1 = 7000;
@@ -24,17 +24,56 @@ public class Customer {
     final int TIER2_CUTOFF = 13000;
     final double GALLONS = 1000.0;
 
+    //GETTER - allow for classes to get information
+    public int getGallonsUsed(){
+        return gallonsUsed;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getCustomerType() {
+        return customerType;
+    }
+
+    public double getBill() {
+        return bill;
+    }
+    //SETTER - allows for us to set a value
+    public void setName(String name) {
+        if (name.equals("") || name == null){
+            System.out.println("Must have a name");
+        }
+        else {
+            this.name = name;
+        }
+    }
+
+    public void setCustomerType(int customerType) {
+        this.customerType = customerType;
+    }
+
+    public void setGallonsUsed(int gallonsUsed){
+        if (gallonsUsed < 0 ){
+            System.out.println("Gallons must be postive");
+        }
+        else{
+            this.gallonsUsed = gallonsUsed;
+
+        }
+    }
 
     public void customerInput() {
         InputStreamReader inputStreamReader = new InputStreamReader(System.in);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         try {
             System.out.print("Enter Customer Name: ");
-            name = bufferedReader.readLine();
+            setName(bufferedReader.readLine());
             System.out.print("Enter Customer Type (1: SingleFamily, 2: Duplex): ");
             customerType = Integer.parseInt(bufferedReader.readLine());
             System.out.print("Enter gallons used: ");
-            gallonsUsed = Integer.parseInt(bufferedReader.readLine());
+            setGallonsUsed(Integer.parseInt(bufferedReader.readLine()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
