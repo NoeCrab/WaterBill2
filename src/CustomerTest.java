@@ -166,10 +166,43 @@ class CustomerTest {
         assertEquals(42.28, customer.getBill(), 0.01);
     }
 
-    @Test
-    public void testEmptyName(){
-        Customer customer = new Customer();
 
+    @Test
+    void testNegativeGallons() {
+        Customer customer = new Customer();
+        customer.setGallonsUsed(-100);
+        assertEquals(0, customer.getGallonsUsed());
     }
+    @Test
+    void testZeroGallons() {
+        Customer customer = new Customer();
+        customer.setGallonsUsed(0);
+        assertEquals(0, customer.getGallonsUsed());
+    }
+    @Test
+    void testValidGallons() {
+        Customer customer = new Customer();
+        customer.setGallonsUsed(5000);
+        assertEquals(5000, customer.getGallonsUsed());
+    }
+    @Test
+    void testEmptyName() {
+        Customer customer = new Customer();
+        customer.setName("");
+        assertNull(customer.getName());
+    }
+    @Test
+    void testNullName() {
+        Customer customer = new Customer();
+        customer.setName(null);
+        assertNull(customer.getName());
+    }
+    @Test
+    void testValidName() {
+        Customer customer = new Customer();
+        customer.setName("John Smith");
+        assertEquals("John Smith", customer.getName());
+    }
+
 
 }
