@@ -5,10 +5,7 @@ import java.io.InputStreamReader;
 public class Main {
     public static void main(String[] args){
       Customer c = new Customer();
-      c.setName("");
-      c.customerInput();
-      c.calculateBill();
-      c.printBill();
+      Customer c1 = new Customer("Alice", -8000, 2);
     }
 
 }

@@ -24,6 +24,18 @@ public class Customer {
     final int TIER2_CUTOFF = 13000;
     final double GALLONS = 1000.0;
 
+    public Customer(){
+
+    }
+
+    public Customer(String name, int gallonsUsed, int customerType){
+        System.out.println("THIS IS A CUSTOMER");
+        setName(name);
+        setGallonsUsed(gallonsUsed);
+        setCustomerType(customerType);
+    }
+
+
     //GETTER - allow for classes to get information
     public int getGallonsUsed(){
         return gallonsUsed;
@@ -71,7 +83,7 @@ public class Customer {
             System.out.print("Enter Customer Name: ");
             setName(bufferedReader.readLine());
             System.out.print("Enter Customer Type (1: SingleFamily, 2: Duplex): ");
-            customerType = Integer.parseInt(bufferedReader.readLine());
+            setCustomerType(Integer.parseInt(bufferedReader.readLine()));
             System.out.print("Enter gallons used: ");
             setGallonsUsed(Integer.parseInt(bufferedReader.readLine()));
         } catch (IOException e) {
