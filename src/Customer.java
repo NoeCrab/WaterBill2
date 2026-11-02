@@ -1,42 +1,64 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
-public class Customer {
+public abstract class Customer {
+
 
     private String name;
     private int gallonsUsed;
-    private int customerType; //1 = Single Family and 2 = Duplex
+    // private int customerType; //1 = Single Family and 2 = Duplex
     private double bill;
 
-    final double SINGLE_BASE = 13.21;
-    final int SINGLE_TIER1 = 7000;
-    final double SINGLE_TIER1_COST = 2.04;
-    final int SINGLE_TIER2 = 6000;
-    final double SINGLE_TIER2_COST = 2.35;
-    final double SINGLE_TIER3_COST = 2.70;
-    final double DUPLEX_BASE = 15.51;
-    final int DUPLEX_TIER1 = 9000;
-    final double DUPLEX_TIER1_COST = 1.97;
-    final int DUPLEX_TIER2 = 4000;
-    final double DUPLEX_TIER2_COST = 2.26;
-    final double DUPLEX_TIER3_COST = 2.60;
     final int TIER2_CUTOFF = 13000;
     final double GALLONS = 1000.0;
 
-    public Customer(){
+    double BASE;
+    int TIER1;
+    double TIER1_COST;
+    int TIER2;
+    double TIER2_COST;
+    double TIER3_COST;
 
+    static private ArrayList<Customer> allCustomers = new ArrayList<Customer>();
+
+
+    public Customer(){
+        System.out.println("customer");
+        this.name = null;
+        this.gallonsUsed = 0;
     }
 
-    public Customer(String name, int gallonsUsed, int customerType){
-        System.out.println("THIS IS A CUSTOMER");
+    protected Customer(String name, int gallonsUsed, double base, int tier1, double tier1Cost, int tier2, double tier2Cost, double tier3Cost){
         setName(name);
         setGallonsUsed(gallonsUsed);
-        setCustomerType(customerType);
+
+        this.BASE = base;
+        this.TIER1 = tier1;
+        this.TIER1_COST = tier1Cost;
+        this.TIER2 = tier2;
+        this.TIER2_COST = tier2Cost;
+        this.TIER3_COST = tier3Cost;
+    }
+
+    protected Customer(double base, int tier1, double tier1Cost, int tier2, double tier2Cost, double tier3Cost){
+
+        this.BASE = base;
+        this.TIER1 = tier1;
+        this.TIER1_COST = tier1Cost;
+        this.TIER2 = tier2;
+        this.TIER2_COST = tier2Cost;
+        this.TIER3_COST = tier3Cost;
     }
 
 
     //GETTER - allow for classes to get information
+
+    static public ArrayList<Customer> getAllCustomers() {
+        return allCustomers;
+    }
+
     public int getGallonsUsed(){
         return gallonsUsed;
     }
@@ -45,9 +67,9 @@ public class Customer {
         return name;
     }
 
-    public int getCustomerType() {
+    /*public int getCustomerType() {
         return customerType;
-    }
+    }*/
 
     public double getBill() {
         return bill;
@@ -62,9 +84,11 @@ public class Customer {
         }
     }
 
+    /*
     public void setCustomerType(int customerType) {
         this.customerType = customerType;
     }
+    */
 
     public void setGallonsUsed(int gallonsUsed){
         if (gallonsUsed < 0 ){
@@ -76,14 +100,18 @@ public class Customer {
         }
     }
 
+    protected void registerCustomer(){
+        allCustomers.add(this);
+    }
+
     public void customerInput() {
         InputStreamReader inputStreamReader = new InputStreamReader(System.in);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         try {
             System.out.print("Enter Customer Name: ");
             setName(bufferedReader.readLine());
-            System.out.print("Enter Customer Type (1: SingleFamily, 2: Duplex): ");
-            setCustomerType(Integer.parseInt(bufferedReader.readLine()));
+            //System.out.print("Enter Customer Type (1: SingleFamily, 2: Duplex): ");
+            //setCustomerType(Integer.parseInt(bufferedReader.readLine()));
             System.out.print("Enter gallons used: ");
             setGallonsUsed(Integer.parseInt(bufferedReader.readLine()));
         } catch (IOException e) {
@@ -91,43 +119,52 @@ public class Customer {
         }
     }
 
-    public void calculateBill() {
-
-        if (customerType == 1) {
-            if (gallonsUsed <= SINGLE_TIER1) {
-                bill = SINGLE_BASE + gallonsUsed * (SINGLE_TIER1_COST / GALLONS);
-            } else if (gallonsUsed <= TIER2_CUTOFF) {
-                bill = SINGLE_BASE + SINGLE_TIER1 * (SINGLE_TIER1_COST / GALLONS)
-                        + (gallonsUsed - SINGLE_TIER1) * (SINGLE_TIER2_COST /
-                        GALLONS);
-            } else {
-                bill = SINGLE_BASE + SINGLE_TIER1 * (SINGLE_TIER1_COST / GALLONS)
-                        + SINGLE_TIER2 * (SINGLE_TIER2_COST / GALLONS)
-                        + (gallonsUsed - TIER2_CUTOFF) * (SINGLE_TIER3_COST /
-                        GALLONS);
-            }
+    protected double calculateBill(){
+        if (getGallonsUsed() <= TIER1) {
+            bill = BASE + getGallonsUsed() * (TIER1_COST / GALLONS);
+        } else if (getGallonsUsed() <= TIER2_CUTOFF) {
+            bill = BASE + TIER1 * (TIER1_COST / GALLONS)
+                    + (getGallonsUsed() - TIER1) * (TIER2_COST /
+                    GALLONS);
         } else {
-            if (gallonsUsed <= DUPLEX_TIER1) {
-                bill = DUPLEX_BASE + gallonsUsed * (DUPLEX_TIER1_COST / GALLONS);
-            } else if (gallonsUsed <= TIER2_CUTOFF) {
-                bill = DUPLEX_BASE + DUPLEX_TIER1 * (DUPLEX_TIER1_COST / GALLONS)
-                        + (gallonsUsed - DUPLEX_TIER1) * (DUPLEX_TIER2_COST /
-                        GALLONS);
-            } else {
-                bill = DUPLEX_BASE + DUPLEX_TIER1 * (DUPLEX_TIER1_COST / GALLONS)
-                        + DUPLEX_TIER2 * (DUPLEX_TIER2_COST / GALLONS)
-                        + (gallonsUsed - TIER2_CUTOFF) * (DUPLEX_TIER3_COST /
-                        GALLONS);
-            }
+            bill = BASE + TIER1 * (TIER1_COST / GALLONS)
+                    + TIER2 * (TIER2_COST / GALLONS)
+                    + (getGallonsUsed() - TIER2_CUTOFF) * (TIER3_COST /
+                    GALLONS);
         }
+        return bill;
+
     }
 
 
+    protected double applyDiscount(double calculatedBill){
+        return calculatedBill;
+    }
+
+    public void generateBill(){
+        double calculated = calculateBill();
+        double finalBill = applyDiscount(calculated);
+
+        this.bill = finalBill;
+
+        registerCustomer();
+    }
     public void printBill() {
         System.out.println("The bill is " + bill);
 
     }
 
+    @Override
+    public String toString() {
+        return "Name " + getName();
+    }
+
+    static public Customer getHighestCustomer(){
+        //logic used for getting highest Customer
+        return null;
+    }
+
+    
 }
 
 
